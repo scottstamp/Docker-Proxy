@@ -3,6 +3,8 @@ package proxy
 import (
 	"github.com/dotcloud/docker/utils"
 	"io"
+	"os"
+	"fmt"
 	"log"
 	"net"
 	"syscall"
