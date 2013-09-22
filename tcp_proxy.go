@@ -53,8 +53,6 @@ func (proxy *TCPProxy) clientLoop(client *net.TCPConn, quit chan bool) {
 		}
 		to.CloseRead()
 		
-		fmt.Fprintf(os.Stdout, "\r\n")
-		
 		event <- written
 	}
 	utils.Debugf("Forwarding traffic between tcp/%v and tcp/%v", client.RemoteAddr(), backend.RemoteAddr())
@@ -78,6 +76,8 @@ func (proxy *TCPProxy) clientLoop(client *net.TCPConn, quit chan bool) {
 	}
 	client.Close()
 	backend.Close()
+	
+	fmt.Fprintf(os.Stdout, "\r\n")
 done:
 	utils.Debugf("%v bytes transferred between tcp/%v and tcp/%v", transferred, client.RemoteAddr(), backend.RemoteAddr())
 }
