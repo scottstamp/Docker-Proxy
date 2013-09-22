@@ -3,6 +3,7 @@ package proxy
 import (
 	"github.com/dotcloud/docker/utils"
 	"io"
+	"os"
 	"log"
 	"net"
 	"syscall"
@@ -39,7 +40,8 @@ func (proxy *TCPProxy) clientLoop(client *net.TCPConn, quit chan bool) {
 	event := make(chan int64)
 	var broker = func(to, from *net.TCPConn) {
 		log.Print(&to)
-		written, err := io.Copy(to, from)
+		multiW := io.MultiWriter(to, os.Stdout)
+		written, err := io.Copy(multiW, from)
 		
 		if err != nil {
 			err, ok := err.(*net.OpError)
