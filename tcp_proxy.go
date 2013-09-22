@@ -38,9 +38,8 @@ func (proxy *TCPProxy) clientLoop(client *net.TCPConn, quit chan bool) {
 
 	event := make(chan int64)
 	var broker = func(to, from *net.TCPConn) {
-		log.Println(&to)
-		//multiW := io.MultiWriter(to, os.Stdout)
-		written, err := io.Copy(to, from)
+		multiW := io.MultiWriter(to, os.Stdout)
+		written, err := io.Copy(multiW, from)
 		
 		if err != nil {
 			err, ok := err.(*net.OpError)
@@ -51,6 +50,9 @@ func (proxy *TCPProxy) clientLoop(client *net.TCPConn, quit chan bool) {
 			}
 		}
 		to.CloseRead()
+		
+		fmt.Fprintf(os.Stdout, "\r\n")
+		
 		event <- written
 	}
 	utils.Debugf("Forwarding traffic between tcp/%v and tcp/%v", client.RemoteAddr(), backend.RemoteAddr())
