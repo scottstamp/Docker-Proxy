@@ -38,9 +38,8 @@ func (proxy *TCPProxy) clientLoop(client *net.TCPConn, quit chan bool) {
 
 	event := make(chan int64)
 	var broker = func(to, from *net.TCPConn) {
-		log, err := io.Copy(to, buf *net.TCPConn)
-		log.Print(buf)
-		written, err := io.Copy(buf, from)
+		written, err := io.Copy(to, from)
+		log.Print(&to)
 		if err != nil {
 			err, ok := err.(*net.OpError)
 			// If the socket we are writing to is shutdown with
